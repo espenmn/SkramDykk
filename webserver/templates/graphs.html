@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Gabriel hoveside{% endblock %}
+{% block head %}
+    {{ super() }}
+    <style type="text/css">
+        .important { color: #336699; }
+    </style>
+{% endblock %}
+{% block content %}
+    <h1>Gabriel grafer</h1>
+
+    <ul>
+    <li><a href="http://127.0.0.1:5000/graphs/temp">Temperatur</a></li>
+
+    <li><a href="http://127.0.0.1:5000/graphs/salt">Salt</a></li>
+
+    <li><a href="http://127.0.0.1:5000/graphs/oxygene">Oksygen</a></li>
+
+    <li><a href="http://127.0.0.1:5000/graphs/turbidity">Turbiditet</a></li>
+
+    <li><a href="http://127.0.0.1:5000/graphs/fluorescens">Fluorescens</a></li>
+    </ul>
+{% endblock %}

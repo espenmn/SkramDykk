@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    {% block head %}
+    <!--<link rel="stylesheet" href="style.css" /> ...-->
+    <title>{% block title %}{% endblock %} - My Webpage</title>
+    {% endblock %}
+</head>
+<body>
+    <div id="content">{% block content %}{% endblock %}</div>
+
+    <div id="footer" style="margin-top: 30px">
+        {% block footer %}
+        &copy; Proudly made by <a href="http://sensar.io/">Sensar.io</a>.
+        {% endblock %}
+    </div>
+</body>
+</html>

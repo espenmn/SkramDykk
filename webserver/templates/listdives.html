@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Index{% endblock %}
+{% block head %}
+    {{ super() }}
+    <style type="text/css">
+        .important { color: #336699; }
+    </style>
+{% endblock %}
+{% block content %}
+    <h1>List of all dives</h1>
+    {% for dive in dives %}
+        <p>{{ dive.profilenumber }} datetime: {{ dive.startdatetime }} <a href="http://127.0.0.1:5000/dives/{{dive.profilenumber}}">{{dive.profilenumber}}</a></p>
+    {% endfor %}
+
+
+
+{% endblock %}

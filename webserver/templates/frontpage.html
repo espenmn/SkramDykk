@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Gabriel hoveside{% endblock %}
+{% block head %}
+    {{ super() }}
+    <style type="text/css">
+        .important { color: #336699; }
+    </style>
+{% endblock %}
+{% block content %}
+    <h1>Gabriel hovedside</h1>
+
+    Gabriel er en CTD som logger data om temperatur, salt, mm. i Store Lungegårdsvannet.
+
+    For å komme fort i gang anbefaler vi så se på <a href="http://127.0.0.1:5000/graphs">grafene</a>.
+    Grafene gir deg anledning til å zoome inn og vise detaljer. Oppløsningen på dataene er hver 3 time!
+
+    Videre er det mulig å laste ned data fra server til programmer du kan kan kjøre selv.
+    Disse programmene ligger på <a href="https://github.com/njberland/SkramDykk/notebooks">Skramdykk notebooks</a>.
+    Programmene vil selv hente data fra denne serveren.
+
+    <h2>Grafer</h2>
+
+    <a href="http://127.0.0.1:5000/allgraphs">Grafer</a>
+
+    <h2>Data for nedlastning</h2>
+
+    <a href="http://127.0.0.1:5000/dives">Rådata</a>
+    <a href="http://127.0.0.1:5000/dives">Interpolerte</a>
+    <a href="http://127.0.0.1:5000/dives">Resampled</a>
+
+    <h2>Stats</h2>
+
+    <a href="http://127.0.0.1:5000/stats">Stats</a>
+
+
+    <h2>Lenker</h2>
+
+    All kode ligger på <a href="https://github.com/njberland/SkramDykk">GitHub</a>
+
+
+{% endblock %}
