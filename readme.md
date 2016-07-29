@@ -16,7 +16,7 @@ At present the server is located at  [http://146.185.167.10](http://146.185.167.
 
 ![Screenshot](https://github.com/njberland/SkramDykk/blob/master/screenshots/Screenshot%20temperature.png "Screenshot")
 
-![Gabriel](https://github.com/njberland/SkramDykk/blob/master/screenshots/gabriel.jpg "Gabriel")
+![Gabriel](https://github.com/njberland/SkramDykk/blob/master/screenshots/gabriel.JPG "Gabriel")
 
 
 
