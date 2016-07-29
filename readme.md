@@ -12,6 +12,6 @@ The work is supported by:
 * Universitetet i Bergen - Geofysisk - www.uib.no
 * Sensario.no - www.sensar.io
 
-At present the server is located at  [http://146.185.167.10:5000](http://146.185.167.10:5000)
+At present the server is located at  [http://146.185.167.10](http://146.185.167.10)
 
 
