@@ -4,8 +4,6 @@ import pymongo
 from bson import json_util
 import json
 import logging
-
-import json
 import plotly
 import pandas as pd
 import numpy as np
@@ -86,18 +84,18 @@ def count():
     coll = pymongo.MongoClient().saivasdata.gabrielraw
     return 'dives {}'.format(coll.find().count())
 
-@app.route('/dives')
-def dives():
-    coll = pymongo.MongoClient().saivasdata.gabrielraw
-    cdives = []
-    # get all dives
-    divecursor = coll.find().sort('startdatetime', pymongo.DESCENDING).limit(100)
+@app.route('/resampled/<dtype>.json')
+def divesjson(dtype):
+    coll = pymongo.MongoClient().saivasdata.resampled
+    alldives = []
+    # get all dives for a timeframe and datatype
+    divecursor = coll.find({'timeframe':'3H', 'datatype':dtype}).sort('ts', pymongo.ASCENDING)
     for dive in divecursor:
-        cdives.append(dive)
-    return render_template('listdives.html', dives=cdives)
+        alldives.append(dive)
+    return json.dumps(alldives, default=json_util.default)
 
 @app.route('/dives')
-def divesjson():
+def dives():
     coll = pymongo.MongoClient().saivasdata.gabrielraw
     cdives = []
     # get all dives
@@ -117,21 +115,10 @@ def onedive(diveid):
     else:
         return 'None '
 
-@app.route('/dives/<diveid>.json')
-def onedivejson(diveid):
-    coll = pymongo.MongoClient().saivasdata.gabrielraw
-    searchid = int(diveid)
-    dive = coll.find_one({"profilenumber": searchid})
-    if dive != None:
-        retstring = json.dumps(dive, default=json_util.default)
-        return json.dumps(retstring)  # 'dive number {}'.format(dive['_id'])
-    else:
-        return 'None '
-
 @app.route('/stats')
 def stats():
     return render_template('stats.html')
 
 if __name__ == "__main__":
     app.config['DEBUG'] = True
-    app.run()
+    app.run('0.0.0.0')
