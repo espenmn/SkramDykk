@@ -1,6 +1,7 @@
 #!/bin/bash
 
-cd /home/njb/PycharmProjects/amalieskram
+cd /home/njb/skramdykk
+mkdir -p textfiles
 mkdir -p log
 python3 fetchdata/fetchdata.py >> log/fetch.log
 python3 interpolatedives/interpolatedives.py >> log/process.log
