@@ -1,63 +1,27 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask import render_template
 import pymongo
+from datetime import datetime
 from bson import json_util
 import json
-import logging
+#import logging
 import plotly
-import pandas as pd
-import numpy as np
+#import pandas as pd
+
+from utils import generate_datasets, generate_freq
 
 app = Flask(__name__)
 
 
-def generate_datasets(timeframe, datatype, title):
-
-    coll = pymongo.MongoClient().saivasdata.resampled
-    tempz = []
-    y = []
-    x = []
-    for curs in coll.find({"timeframe": timeframe, "datatype": datatype}).sort("ts", pymongo.ASCENDING):
-        # print(curs)
-
-        col = []
-        # sort the list so the dictionaries are sorted according to pressure
-        newlist = sorted(curs['divedata'], key=lambda k: -k['pressure(dBAR)'])
-        for i in newlist:
-            col.append(i[datatype])
-            if -i['pressure(dBAR)'] not in y:
-                y.append(-i['pressure(dBAR)'])
-
-        tempz.append(col)
-        x.append(curs['ts'])
-    z = list(map(list, zip(*tempz)))
-    y = sorted(y)
-
-    graphs = [
-        dict(
-            data=[
-                dict(
-                    z=z,
-                    x=x,
-                    y=y,
-                    type='heatmap'
-                ),
-            ],
-            layout=dict(
-                title=title
-            )
-        )
-    ]
-
-    return graphs  # x, y, z  # [go.Heatmap(x=x, y=y, z=z)]
-
-
+# the main page
 @app.route('/')
 def frontpage():
     return render_template('frontpage.html')
     # return 'Gabriel web server'
 
-
+# this resource will return a web-page with all graphs for the lifetime of the DTS
+# it is not very fast because it contains a LOT of data - this can be improved by either updating a plot at plot.ly
+# or using javascript queries
 @app.route('/allgraphs')
 def allgraphs():
     ids = []
@@ -76,23 +40,34 @@ def allgraphs():
                            ids=ids,
                            graphJSON=graphJSON)
 
-    return render_template('graphview.html')
 
-
-@app.route('/count')
-def count():
-    coll = pymongo.MongoClient().saivasdata.gabrielraw
-    return 'dives {}'.format(coll.find().count())
-
+# this will return a json doc with ALL observations resampled and interpolated for a given datatype
 @app.route('/resampled/<dtype>.json')
-def divesjson(dtype):
+def resampledjson(dtype):
     coll = pymongo.MongoClient().saivasdata.resampled
     alldives = []
     # get all dives for a timeframe and datatype
-    divecursor = coll.find({'timeframe':'3H', 'datatype':dtype}).sort('ts', pymongo.ASCENDING)
+    divecursor = coll.find({'timeframe':'3H', 'datatype':dtype},{"_id":0}).sort('ts', pymongo.ASCENDING)
     for dive in divecursor:
         alldives.append(dive)
-    return json.dumps(alldives, default=json_util.default)
+    return jsonify(alldives) #json.dumps(alldives, default=json_util.default)
+
+
+# this will return a json doc with all raw dives for a given year
+@app.route('/raw/<year>.json')
+def rawjson(year):
+    # find a from and to statement
+    start = datetime(int(year),1,1,0,0,0)
+    end = datetime(int(year)+1,1,1,0,0,0)
+
+    coll = pymongo.MongoClient().saivasdata.gabrielraw
+    alldives = []
+    # get all dives for a timeframe and datatype
+    divecursor = coll.find({'startdatetime':{'$lt': end, '$gte': start}},{"_id":0}).sort('startdatetime', pymongo.ASCENDING)
+    for dive in divecursor:
+        alldives.append(dive)
+    return jsonify(alldives) # (alldives, default=json_util.default)
+
 
 @app.route('/dives')
 def dives():
@@ -103,6 +78,7 @@ def dives():
     for dive in divecursor:
         cdives.append(dive)
     return render_template('listdives.html', dives=cdives)
+
 
 @app.route('/dives/<diveid>')
 def onedive(diveid):
@@ -115,9 +91,29 @@ def onedive(diveid):
     else:
         return 'None '
 
+
 @app.route('/stats')
 def stats():
-    return render_template('stats.html')
+    ids = []
+    graphs = []
+    for g in [{'id': 'Freq', 'desc': 'Dykk pr dag'},]:
+        graph = generate_freq(g['desc'])
+        ids.append(g['id'])
+        graphs.append(graph[0])
+
+    graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
+    return render_template('graphview.html',
+                           ids=ids,
+                           graphJSON=graphJSON)
+
+
+# resource that tells how many dives are in the DB
+@app.route('/count')
+def count():
+    coll = pymongo.MongoClient().saivasdata.gabrielraw
+    return 'dives {}'.format(coll.find().count())
+
+
 
 if __name__ == "__main__":
     app.config['DEBUG'] = True

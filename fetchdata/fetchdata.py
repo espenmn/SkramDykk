@@ -8,7 +8,7 @@ import os
 from saivas import SaivasServer
 
 # set the directory to store the text files retrieved from the FTP server
-LOCALDIR = "/home/njb/skramdykk/textfiles/"
+LOCALDIR = "textfiles/"
 
 FTPSERVER = "station.saivas.net"
 USERNAME_Gabriel = "14000000"

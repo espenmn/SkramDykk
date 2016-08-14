@@ -25,6 +25,7 @@ def generate_freq(title):
         )
     ]
 
+    return graphs
 
 def generate_datasets(timeframe, datatype, title):
 
@@ -65,3 +66,9 @@ def generate_datasets(timeframe, datatype, title):
     ]
 
     return graphs
+
+if __name__ == "__main__":
+
+    print(generate_freq("hallo"))
+
+    print(generate_datasets("3H",'temp','hallo'))
