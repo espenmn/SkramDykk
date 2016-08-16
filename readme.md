@@ -20,5 +20,7 @@ The work is supported by:
 
 ![Gabriel](https://github.com/njberland/SkramDykk/blob/master/screenshots/gabriel.JPG "Gabriel")
 
+What happens if ftp-server is down ?
+
 
 
